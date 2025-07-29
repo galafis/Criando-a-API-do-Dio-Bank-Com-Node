@@ -24,3 +24,22 @@ npm run test
 
 Inspirado no repositório oficial da DIO:  
 https://github.com/digitalinnovationone/desafio04-ts
+
+## 📋 Descrição
+
+Descreva aqui o conteúdo desta seção.
+
+
+## 📦 Instalação
+
+Descreva aqui o conteúdo desta seção.
+
+
+## 💻 Uso
+
+Descreva aqui o conteúdo desta seção.
+
+
+## 📄 Licença
+
+Descreva aqui o conteúdo desta seção.
