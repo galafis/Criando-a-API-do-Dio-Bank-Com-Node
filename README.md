@@ -1,233 +1,150 @@
-# Dio Bank API – Node.js + TypeScript
+# Dio Bank API
 
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
-[![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2671E7?style=for-the-badge&logo=githubactions&logoColor=white)](https://docs.github.com/en/actions)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-339933.svg?logo=node.js&logoColor=white)](https://nodejs.org)
+[![Express](https://img.shields.io/badge/Express-4.x-000000.svg?logo=express&logoColor=white)](https://expressjs.com)
+[![Jest](https://img.shields.io/badge/Jest-Testing-C21325.svg?logo=jest&logoColor=white)](https://jestjs.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker)](Dockerfile)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](Dockerfile)
 
----
-
-## Arquitetura da API | API Architecture
-
-```mermaid
-flowchart TD
-    Client([Client\nHTTP Request]) -->|POST / GET / DELETE| Router
-
-    subgraph API["Node.js + TypeScript API"]
-        Router["Router\n/users\n/users/:id"] --> Middleware
-        Middleware["Middleware\nValidacao de Email\nAutenticacao"] --> Controller
-        Controller["UserController\ncreateUser\nlistUsers\ndeleteUser"] --> Service
-        Service["UserService\nBusiness Logic\nValidations"] --> Data
-        Data["In-Memory Store\nusers: User[]"]
-    end
-
-    Data -->|User[]| Service
-    Service -->|UserDTO| Controller
-    Controller -->|JSON Response| Client
-
-    subgraph Testing["Test Layer"]
-        Jest["Jest\nUnit Tests\nUserService.spec.ts\nUserController.spec.ts"]
-    end
-
-    Service -.->|tested by| Jest
-
-    style API fill:#1e3a5f,color:#fff
-    style Testing fill:#3d1e5f,color:#fff
-    style Client fill:#2d6a4f,color:#fff
-```
-
----
-
-## Portugues
-
-Este projeto e parte de um desafio da **DIO (Digital Innovation One)** para construcao de uma API com boas praticas, validacao de dados e testes unitarios utilizando Node.js e TypeScript.
-
-### Funcionalidades
-
-- Criar usuarios com validacao de email
-- Listar usuarios cadastrados
-- Deletar usuario por ID
-- Testes unitarios com Jest
-- Validacao robusta de dados de entrada
-
-### Endpoints
-
-| Metodo | Rota | Descricao |
-|--------|------|-----------|
-| `POST` | `/users` | Criar novo usuario |
-| `GET` | `/users` | Listar todos os usuarios |
-| `DELETE` | `/users/:id` | Deletar usuario por ID |
-
-### Como Executar
-
-1. Clone o repositorio:
-   ```bash
-   git clone https://github.com/galafis/Criando-a-API-do-Dio-Bank-Com-Node.git
-   cd Criando-a-API-do-Dio-Bank-Com-Node
-   ```
-
-2. Instale as dependencias:
-   ```bash
-   npm install
-   ```
-
-3. Inicie em modo de desenvolvimento:
-   ```bash
-   npm run dev
-   ```
-
-4. A API estara disponivel em `http://localhost:3000`
-
-### Testes
-
-```bash
-npm run test
-```
-
-### Exemplo de Uso
-
-```bash
-# Criar usuario
-curl -X POST http://localhost:3000/users \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Gabriel Lafis", "email": "gabriel@galafis.dev"}'
-
-# Listar usuarios
-curl -X GET http://localhost:3000/users
-
-# Deletar usuario
-curl -X DELETE http://localhost:3000/users/1
-```
-
-### Estrutura do Projeto
-
-```
-src/
- ├── index.ts                # Entry point
- ├── routes/
- │   └── userRoutes.ts       # Definicao de rotas
- ├── controllers/
- │   └── UserController.ts   # Logica de controle
- ├── services/
- │   └── UserService.ts      # Regras de negocio
- ├── models/
- │   └── User.ts             # Interface do modelo
- └── middlewares/
-     └── validation.ts       # Validacao de dados
-tests/
- ├── UserService.spec.ts
- └── UserController.spec.ts
-```
+[English](#english) | [Portugues (BR)](#portugues-br)
 
 ---
 
 ## English
 
-This project is part of a **DIO (Digital Innovation One)** challenge to build an API with best practices, data validation, and unit tests using Node.js and TypeScript.
+### Overview
 
-### Features
+Banking API built with Node.js, Express, and TypeScript as part of a DIO bootcamp challenge. Implements RESTful endpoints for account creation, balance inquiries, deposits, withdrawals, and statement management with in-memory data persistence and comprehensive input validation.
 
-- Create users with email validation
-- List registered users
-- Delete user by ID
-- Unit tests with Jest
-- Robust input data validation
+### Architecture
 
-### Endpoints
-
-| Method | Route | Description |
-|--------|-------|-------------|
-| `POST` | `/users` | Create new user |
-| `GET` | `/users` | List all users |
-| `DELETE` | `/users/:id` | Delete user by ID |
-
-### How to Run
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/galafis/Criando-a-API-do-Dio-Bank-Com-Node.git
-   cd Criando-a-API-do-Dio-Bank-Com-Node
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start in development mode:
-   ```bash
-   npm run dev
-   ```
-
-4. The API will be available at `http://localhost:3000`
-
-### Tests
-
-```bash
-npm run test
+```mermaid
+graph TB
+    subgraph Client["Client Layer"]
+        A[HTTP Requests]
+    end
+    subgraph API["Express Server"]
+        B[Routes]
+        C[Middleware / Validation]
+        D[Controllers]
+    end
+    subgraph Data["Data Layer"]
+        E[In-Memory Store]
+    end
+    A --> B --> C --> D --> E
+    style Client fill:#e3f2fd
+    style API fill:#e8f5e9
+    style Data fill:#f3e5f5
 ```
 
-### Usage Example
+### Key Features
+
+- **Account Management** -- Create, update, and delete banking accounts with CPF validation
+- **Balance Operations** -- Real-time balance calculation from statement history
+- **Deposit and Withdrawal** -- Credit and debit operations with validation rules
+- **Statement History** -- Filterable transaction history with date-range queries
+- **Input Validation** -- Middleware-based request validation for all endpoints
+- **RESTful Design** -- Clean API endpoints following HTTP standards
+
+### Industry Application
+
+This project demonstrates core banking API patterns used in fintech applications, digital wallets, and payment platforms. The account and transaction management concepts apply directly to neobank MVPs, credit union systems, and financial microservices.
+
+### Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| **TypeScript 5.0+** | Type-safe application logic |
+| **Node.js** | Runtime environment |
+| **Express** | HTTP framework |
+| **Jest** | Testing framework |
+| **Docker** | Containerized deployment |
+
+### Quick Start
 
 ```bash
-# Create user
-curl -X POST http://localhost:3000/users \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Gabriel Lafis", "email": "gabriel@galafis.dev"}'
+git clone https://github.com/galafis/Criando-a-API-do-Dio-Bank-Com-Node.git
+cd Criando-a-API-do-Dio-Bank-Com-Node
+npm install
+npm run dev
+```
 
-# List users
-curl -X GET http://localhost:3000/users
+### Docker
 
-# Delete user
-curl -X DELETE http://localhost:3000/users/1
+```bash
+docker build -t dio-bank-api .
+docker run -p 3000:3000 dio-bank-api
+```
+
+### Testing
+
+```bash
+npm test
 ```
 
 ### Project Structure
 
 ```
-src/
- ├── index.ts                # Entry point
- ├── routes/
- │   └── userRoutes.ts       # Route definitions
- ├── controllers/
- │   └── UserController.ts   # Request handling
- ├── services/
- │   └── UserService.ts      # Business rules
- ├── models/
- │   └── User.ts             # Model interface
- └── middlewares/
-     └── validation.ts       # Data validation
-tests/
- ├── UserService.spec.ts
- └── UserController.spec.ts
+Criando-a-API-do-Dio-Bank-Com-Node/
+├── src/
+│   └── main.ts
+├── tests/
+├── Dockerfile
+├── jest.config.js
+├── package.json
+├── tsconfig.json
+└── LICENSE
 ```
 
----
+### License
 
-## Tecnologias | Tech Stack
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-- [Node.js](https://nodejs.org/) — Runtime JavaScript
-- [TypeScript](https://www.typescriptlang.org/) — Static typing
-- [Express](https://expressjs.com/) — Web framework
-- [Jest](https://jestjs.io/) — Unit testing
-- [uuid](https://www.npmjs.com/package/uuid) — ID generation
-- [Nodemon](https://www.npmjs.com/package/nodemon) — Auto-reload in development
+### Author
 
----
-
-## Sobre o Autor | About the Author
-
-**Gabriel Demetrios Lafis** — Cientista de Dados com foco em desenvolvimento back-end moderno e APIs bem testadas.
-
-Inspirado no repositorio oficial da DIO: [desafio04-ts](https://github.com/digitalinnovationone/desafio04-ts)
-
-[![GitHub](https://img.shields.io/badge/GitHub-galafis-181717?style=flat&logo=github)](https://github.com/galafis)
+**Gabriel Demetrios Lafis**
+- GitHub: [@galafis](https://github.com/galafis)
+- LinkedIn: [Gabriel Demetrios Lafis](https://linkedin.com/in/gabriel-demetrios-lafis)
 
 ---
 
-## Licenca | License
+## Portugues (BR)
 
-Este projeto esta sob a licenca MIT. | This project is licensed under the MIT License.
+### Visao Geral
 
-Veja o arquivo [LICENSE](LICENSE) para mais detalhes. | See the [LICENSE](LICENSE) file for details.
+API bancaria construida com Node.js, Express e TypeScript como parte de um desafio do bootcamp DIO. Implementa endpoints RESTful para criacao de contas, consultas de saldo, depositos, saques e gerenciamento de extratos com persistencia de dados em memoria e validacao abrangente de entrada.
+
+### Principais Funcionalidades
+
+- **Gerenciamento de Contas** -- Criar, atualizar e excluir contas bancarias com validacao de CPF
+- **Operacoes de Saldo** -- Calculo de saldo em tempo real a partir do historico de extratos
+- **Deposito e Saque** -- Operacoes de credito e debito com regras de validacao
+- **Historico de Extratos** -- Historico de transacoes filtravel com consultas por intervalo de datas
+- **Design RESTful** -- Endpoints de API limpos seguindo padroes HTTP
+
+### Inicio Rapido
+
+```bash
+git clone https://github.com/galafis/Criando-a-API-do-Dio-Bank-Com-Node.git
+cd Criando-a-API-do-Dio-Bank-Com-Node
+npm install
+npm run dev
+```
+
+### Testes
+
+```bash
+npm test
+```
+
+### Licenca
+
+Este projeto esta licenciado sob a Licenca MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+### Autor
+
+**Gabriel Demetrios Lafis**
+- GitHub: [@galafis](https://github.com/galafis)
+- LinkedIn: [Gabriel Demetrios Lafis](https://linkedin.com/in/gabriel-demetrios-lafis)
